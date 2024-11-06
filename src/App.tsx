@@ -17,7 +17,7 @@ function App() {
   const originalUsers = useRef<User[]>([])
 
   //const [originalUsers, setOroginalUsers] = useState<User[]>([]);
-  // esra linea anterior no se debe hacer, cerar otro useState
+  // esta linea anterior no se debe hacer, crear otro useState
   // useRef -> para guardar un valor que queremos que se comparta
   // entre renderizados, pero que al cambiar, no vuelva a renderizar el componente 
   // Implement a feature that allows the user to restore the initial state, 
@@ -51,14 +51,21 @@ function App() {
   useEffect(() => {
     setLoading(true); //v.2.0
     fetch('https://randomuser.me/api?results=10')
-      .then(res => res.json())
-      .then(res => {
+      // v.2.0
+      .then(async res=>{
+        if(!res.ok) throw new Error('Error en la petición');
+        return await res.json();
+      })
+
+      .then(res => {  // resuelve la promesa
         setUsers(res.results)
         originalUsers.current = res.results
       })
+
       .catch(err => {
         console.log(err)
       })
+
       //v.2.0
       .finally(()=>{
         setLoading(false);
