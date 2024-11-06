@@ -1,0 +1,8 @@
+const filteredUsers = useMemo(() => {
+    console.log('calculate filteredUsers')
+    return filterCountry != null && filterCountry.length > 0
+      ? users.filter(user => {
+        return user.location.country.toLowerCase().includes(filterCountry.toLowerCase())
+      })
+      : users
+}, [users, filterCountry])

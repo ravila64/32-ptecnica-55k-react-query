@@ -1,0 +1,5 @@
+estaba en el app, para listar todos los registros de la Api, consumida
+{
+     JSON.stringify(users)
+}    
+

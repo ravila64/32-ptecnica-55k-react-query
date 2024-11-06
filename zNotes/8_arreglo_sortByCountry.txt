@@ -1,0 +1,44 @@
+<button onClick={toggleSortByCountry}>
+      {/* estaba { sortByCountry ? 'Contry-unSorted' : 'Country-Sorted'} */}
+     {sorting===SortBy.COUNTRY ? 'Contry-unSorted' : 'Country-Sorted'}
+ </button>
+
+SE MOFIFICO TAMBIEN
+const toggleSortByCountry = () => {
+    // esto se llama callback prevState=>!prevState
+    const newSortingValue = (sorting === SortBy.NONE ? SortBy.COUNTRY : SortBy.NONE)
+    setSorting(newSortingValue)
+    // setSortByCountry(prevState => !prevState)
+  }
+
+  // se quito
+   const toggleSortByCountry = () => {
+    // esto se llama callback prevState=>!prevState
+    setSortByCountry(prevState => !prevState)
+   }
+
+
+parte de codigo en userList donde quito comentarios
+users.map((user, index) => {
+          const backgroundColor = index % 2 === 0 ? '#79c2d0' : '#bbe4e9'
+          const color = showColors ? backgroundColor : 'transparent'
+          { /* user.id.value => porque hay keys null*/ }
+          {/* eslint-disable-next-line react/react-in-jsx-scope */ }
+          return (
+            <tr key={user.email} style={{ backgroundColor: color }}>
+              <td>
+                <img src={user.picture.thumbnail} />
+              </td>
+              <td>{user.name.first}</td>
+              <td>{user.name.last}</td>
+              <td>{user.location.country}</td>
+              <td>
+                <button onClick={() => {
+                  {/* deleteUser(user.email) */ }
+                  deleteUser(user.email);
+                }}>Delete</button>
+              </td>
+            </tr>
+          )
+        })
+        

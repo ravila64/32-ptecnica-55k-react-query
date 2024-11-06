@@ -1,0 +1,3 @@
+// notas de como solucionar lo del slint
+https://mugan86.medium.com/eslint-en-typescript-paso-a-paso-ab2255321fd
+// esta pagina es super para configurar el eslint

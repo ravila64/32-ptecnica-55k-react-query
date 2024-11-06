@@ -1,0 +1,42 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+}
+
+/* otra forma de colorear seria - video 31- 1.19 */
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+}
+
+/* cambiaria <tbody className={showColors ? 'table--showColors':'table'}> 
+despues va users.map((user)=>{});
+*/
+
+header {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 48px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* en vez de 2n uiliza odd*/
+.table--showColors tr:nth-child(odd) {
+  background: #79c2d0;
+  /*#333 */
+}
+
+/* en vez de 2n+1 uiliza even*/
+.table--showColors tr:nth-child(even) {
+  background: #bbe4e9;
+  /* #555*/
+}
+
+.pointer {
+  /* cursor: crosshair; */
+  cursor: pointer;
+}

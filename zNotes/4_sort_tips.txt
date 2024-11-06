@@ -1,0 +1,28 @@
+//1. esta rutina ordena una sola vez, muta, deja el array ordenado, no me devuelve al array original
+
+//2. utilizar copia del array  [...users].sort((a,b)=>){
+
+}
+//3. utilizar copia prifunda, con structuredClone(users).sort((a,b)=>){
+
+}
+//4. mejor forma para navegadores actualizados
+// validacion ternaria
+  const sortedUsers=sortByCountry
+    ? users.toSorted((a,b)=>{    // part true. best option
+      // ascendent sort
+      return a.location.country.localeCompare(b.location.country)
+    })
+    :users   // part false
+
+//este toSorted() se calificaria con un 10. Hace una copia y despues ordena
+
+otro tips. TENER SOLO UN ESTADO PARA LO MISMO, ejemplo sortedUsers
+
+// la function toSorted, no esta definida en tipos entonces se declara asi:
+// Array<T> el tipo de parametro lo indicamos nosotros 
+declare global {
+  interface Array<T> {
+    toSorted(compareFn?: (a: T, b: T) => number): T[];
+  }
+}

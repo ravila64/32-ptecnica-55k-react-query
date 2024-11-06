@@ -1,0 +1,4 @@
+// cambio de 
+<tr key={index} style={{backgroundColor: color}}>
+camnio por:
+

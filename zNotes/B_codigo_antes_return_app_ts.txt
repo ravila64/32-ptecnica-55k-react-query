@@ -1,0 +1,19 @@
+// const filteredUsers = (() => {
+  //   console.log('calculate filteredUsers')
+  //   return filterCountry != null && filterCountry.length > 0
+  //     ? users.filter(user => {
+  //       return user.location.country.toLowerCase().includes(filterCountry.toLowerCase())
+  //     })
+  //     : users
+  // })()
+
+  // const sortedUsers = (() => {
+  //   console.log('calculate sortedUsers')
+
+  //   return sortByCountry
+  //     ? filteredUsers.toSorted(
+  //       (a, b) => a.location.country.localeCompare(b.location.country)
+  //     )
+  //     : filteredUsers
+  // })()
+  

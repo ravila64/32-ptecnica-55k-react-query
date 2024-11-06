@@ -1,0 +1,15 @@
+// video, 1.31.16 , em el App.tsx
+// cambio grande a sorteredUsers
+
+  // validacion ternaria
+  // estaba [..users].sort((a,b) =>){}
+  // se quito users x filteredUsers
+  const sortedUsers = useMemo(() => {
+    console.log('calculate sortedUsers');
+    return sorting === SortBy.COUNTRY
+      ? filteredUsers.toSorted(
+        (a, b) => a.location.country.localeCompare(b.location.country)
+      ) : filteredUsers
+  }, [filteredUsers, sorting])
+
+**

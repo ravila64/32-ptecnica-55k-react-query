@@ -1,0 +1,19 @@
+se haria este cambio en app.css 
+
+/* otra forma de colorear seria - video 31- 1.19 */
+/* cambiaria <tbody className={showColors ? 'table--showColors':'table'}> 
+despues va users.map((user)=>{});
+*/
+.table--showColors tr:nth-child(2n){    
+  background: red;
+}
+// en vez se 2n, puede colocar (odd)
+.table--showColors tr:nth-child(2n+1){
+  background: blue;
+}
+// en vez de 2n+1 se colocaria: (even)
+y en el App.tsx, se colocaria una className={}
+asi:
+<tbody className={showColors ? 'table--showColors':'table'}> 
+
+

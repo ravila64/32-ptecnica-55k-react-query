@@ -1,0 +1,6 @@
+https://randomuser.me/api?results=100
+
+
+link github de midudev
+https://github.com/midudev/aprendiendo-react
+aprox. 15 proyectos

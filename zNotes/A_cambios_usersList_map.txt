@@ -1,0 +1,25 @@
+<tbody>
+      {
+        users.map((user) => {
+          const backgroundColor = index % 2 === 0 ? '#79c2d0' : '#bbe4e9'
+          const color = showColors ? backgroundColor : 'transparent'
+          return (
+           {/* eslint-disable-next-line react/react-in-jsx-scope */ }
+            <tr key={user.email} style={{ backgroundColor: color; }}>
+              <td>
+                <img src={user.picture.thumbnail} />
+              </td>
+              <td>{user.name.first}</td>
+              <td>{user.name.last}</td>
+              <td>{user.location.country}</td>
+              <td>
+                <button onClick={() => {
+                  {/* deleteUser(user.email) */ }
+                  deleteUser(user.email);
+                }}>Delete</button>
+              </td>
+            </tr>
+          )
+        })
+      }
+    </tbody>
