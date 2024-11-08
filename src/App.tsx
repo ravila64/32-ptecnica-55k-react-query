@@ -13,6 +13,7 @@ function App() {
   
   const [loading, setLoading] = useState(false);  //ver 2.0
   const [error, setError] = useState(false); //v.2.0
+  const [currentPage, setCurrentPage] = useState(1); //v.2.0
 
   const originalUsers = useRef<User[]>([])
 
@@ -22,7 +23,7 @@ function App() {
   // entre renderizados, pero que al cambiar, no vuelva a renderizar el componente 
   // Implement a feature that allows the user to restore the initial state, 
   // meaning that all deleted rows will be recovered.
-
+  
   const toggleColors = () => {
     setShowColors(!showColors)
   }
@@ -50,19 +51,25 @@ function App() {
 
   useEffect(() => {
     setLoading(true); //v.2.0
-    fetch('https://randomuser.me/api?results=10')
+    setError(false);
+
+    fetch('https://randomuser.me/api?results=10&seed=midudev&page=${currentPage}')
       // v.2.0
       .then(async res=>{
+        console.log("Estados del res.ok ", res.ok, " res.status ", res.status, " res.stausText ", res.statusText);
         if(!res.ok) throw new Error('Error en la petición');
         return await res.json();
       })
 
       .then(res => {  // resuelve la promesa
-        setUsers(res.results)
+        // v.2.0
+        setUsers(prevUsers => prevUsers.concat(res.results))
         originalUsers.current = res.results
       })
 
       .catch(err => {
+        // v.2.0
+        setError(err);
         console.log(err)
       })
 
@@ -70,7 +77,7 @@ function App() {
       .finally(()=>{
         setLoading(false);
       })
-  }, [])
+  }, [currentPage])  // cada vez que cambie el valor de la var currentPage
 
   // tambien puede ser: const filteredUsers=filterCountry !== nul && filterCountry.length > 0
   const filteredUsers = useMemo(() => {
@@ -123,15 +130,17 @@ function App() {
 
       </header>
       <main>
+        {/* v.2.0 */}
+        { users.length>0 && 
+          <UsersList changeSorting={handleChangeSort} deleteUser={handleDelete} showColors={showColors}
+          users={sortedUsers} /> }
+
         {loading && <strong>Cargando ...</strong>}
         {!loading && error && <p>Ha habido un error ...</p>}
         {!loading && !error && users.length===0 && <p>No hay usuarios ...</p>}
-        {!loading && !error && users.length>0 && 
-        <UsersList
-          changeSorting={handleChangeSort}
-          deleteUser={handleDelete}
-          showColors={showColors}
-          users={sortedUsers} /> }
+          
+        {!loading && !error && <button onClick={()=>setCurrentPage(currentPage+1)}>Cargar mas resultados</button>}
+
       </main>
     </div >
   )
