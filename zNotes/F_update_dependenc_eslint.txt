@@ -1,0 +1,7 @@
+npm update @typescript-eslint/eslint-plugin
+or
+npm install @typescript-eslint/eslint-plugin@latest
+or
+npm install @typescript-eslint/parser@4.0.0
+or
+install @tanstack/react-query -E

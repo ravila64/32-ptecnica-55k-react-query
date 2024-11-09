@@ -1,0 +1,5 @@
+   // .then(res => {  // resuelve la promesa
+      // v.2.0
+      //   setUsers(prevUsers => prevUsers.concat(res.results))
+      //   originalUsers.current = res.results
+      // })

@@ -3,6 +3,17 @@ import './App.css'
 import { UsersList } from './components/UsersList.tsx'
 import { SortBy, type User } from './types/types.d'
 
+const fetchUsers = async (page: number) => {
+  return await fetch('https://randomuser.me/api?results=10&seed=midudev&page=${page}')
+      // v.2.0
+      .then(async res=>{
+        console.log("Estados del res.ok ", res.ok, " res.status ", res.status, " res.statusText ", res.statusText);
+        if(!res.ok) throw new Error('Error en la petición');
+        return await res.json();
+      })
+      .then(res=>res.results);
+}
+
 function App() {
   // array de users
   const [users, setUsers] = useState<User[]>([])
@@ -52,22 +63,16 @@ function App() {
   useEffect(() => {
     setLoading(true); //v.2.0
     setError(false);
-
-    fetch('https://randomuser.me/api?results=10&seed=midudev&page=${currentPage}')
-      // v.2.0
-      .then(async res=>{
-        console.log("Estados del res.ok ", res.ok, " res.status ", res.status, " res.stausText ", res.statusText);
-        if(!res.ok) throw new Error('Error en la petición');
-        return await res.json();
-      })
-
-      .then(res => {  // resuelve la promesa
-        // v.2.0
-        setUsers(prevUsers => prevUsers.concat(res.results))
-        originalUsers.current = res.results
-      })
-
-      .catch(err => {
+    // v.2.0
+    fetchUsers(currentPage)
+       .then (users=>{
+          setUsers(prevUsers =>{
+            const newUsers= prevUsers.concat(users)
+            originalUsers.current = newUsers
+            return newUsers
+          })
+    })
+    .catch(err => {
         // v.2.0
         setError(err);
         console.log(err)
