@@ -1,0 +1,14 @@
+const pages=[
+    { users: [10,20,30,]},
+    { users: [40,50,60,]}
+];
+pages.map(p=>p.users);
+console.log(pages);
+//[[10,20,30], [40,50,60]]
+
+pages.flatMap(p=>p.users);
+console.log(pages);
+//[[  10,20,30,40,50,60]]
+//pos 0 a la         5
+video 51.58
+

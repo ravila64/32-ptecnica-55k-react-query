@@ -5,47 +5,12 @@ import './App.css'
 import { UsersList } from './components/UsersList.tsx'
 import { SortBy, type User } from './types/types.d'
 
-// cambio page:number x pageParam
-const fetchUsers = async ({ pageParam = 1 }: { pageParam?: number }) => {
-  return await fetch('https://randomuser.me/api?results=10&seed=midudev&page=${pageParm}')
-      // v.2.
-      .then(async res=>{
-        console.log("Page now pageParam ", pageParam)
-        console.log("status of res.ok ", res.ok, " res.status ", res.status, " res.statusText ", res.statusText)
-        if(!res.ok) throw new Error('Error en la petición')
-        return await res.json()   // revisar si retorna un objeto, con nextCursor
-      })
-      //.then(res=>res.results)
-      .then(res=>{
-        const nextCursor =  Number(res.info.page) + 1; 
-        return {
-          users: res.results,
-          nextCursor
-         }  // return promise
-      })
-}
-
 function App() {
 
-  const { isLoading, isError, data, refetch, fetchNextPage, hasNextPage } = useInfiniteQuery<{ nextCursor?: number, users: User[] }>(
-    ['users'], // <- la key de la información o de la query
-    fetchUsers,
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor
-    }
-  )
-
-  // const {isLoading, isError, data: users=[], refetch, fetchNextPage, hasNextPage} = useInfiniteQuery<{nextCursor?:number, users:User[]}>(
-  //   ['users'],   // key de la info
-  //   //async ()=> await fetchUsers(1),  // traer la info
-  //   fetchUsers,
-  //   {
-  //       getNextPageParam: ( lastPage, pages) => lastPage.nextCursor
-  //   }
-  // )
-  
-  //console.log(data);
-  const users: User[]=data?.pages?.[0].users ?? [];
+  console.log("data ------>",data?.pages?.flatMap(page=>page.users));
+  //const users: User[]=data?.pages?.[0].users ?? [];
+  // se utiliza para un infinite scrooll
+  const users: User[]=data?.pages?.flatMap(page=>page.users) ?? [];
  
   // array de users
   //const [users, setUsers] = useState<User[]>([])
@@ -79,7 +44,8 @@ function App() {
   }
   const handleReset = async () => {
     //setUsers(originalUsers.current)
-    await refetch() // paso async-await vers.2.0
+    // await refetch() // paso async-await vers.2.0 -> se quito away coloco void
+    void  refetch();
   }
 
   const handleDelete = (email: string) => {
@@ -118,6 +84,7 @@ function App() {
   // }, [currentPage])  // cada vez que cambie el valor de la var currentPage
 
   // tambien puede ser: const filteredUsers=filterCountry !== null && filterCountry.length > 0
+  
   const filteredUsers = useMemo(() => {
     console.log('calculate filteredUsers');
     return typeof filterCountry === 'string' && filterCountry.length > 0
@@ -148,6 +115,7 @@ function App() {
   return (
     <div className="App">
       <h1>Prueba técnica 55k - React Query</h1>
+      <Results />
       <header>
 
         <button onClick={toggleColors}>
@@ -181,9 +149,11 @@ function App() {
         {!isError && <p>Ha habido un error ...</p>}
         {!isError && users.length===0 && <p>No hay usuarios ...</p>}
           
-        {!isLoading && !isError && 
-        <button onClick={ ()=> {void fetchNextPage()}}>Cargar mas resultados</button>}
+        {!isLoading && !isError && hasNextPage === true &&
+        <button onClick={()=> {void fetchNextPage()}}>Cargar mas resultados</button>}
 
+        {!isLoading && !isError && hasNextPage === false && 
+        <p>No hay mas resultados</p>}
       </main>
     </div >
   )
