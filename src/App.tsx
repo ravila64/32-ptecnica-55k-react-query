@@ -1,13 +1,38 @@
 import { useMemo, useState } from 'react'
 // import { useEffect, useMemo, useRef, useState } from 'react'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanStack/react-query'
 import './App.css'
+import { Results } from './components/Results.tsx'
 import { UsersList } from './components/UsersList.tsx'
 import { SortBy, type User } from './types/types.d'
 
+const fetchUsers = async ( page: number ) => {
+  return await fetch(`https://randomuser.me/api?results=10&seek=ravila&page=${page}`)
+  .then(async res =>{
+    if (!res.ok) throw new Error("Error en la petición")
+    return await res.json()
+  })
+  .then(res => {
+    const nextCursor = Number(res.info.page)
+    return{
+      users: res.results,
+      nextCursor
+    }
+  }
+) 
+
 function App() {
 
-  console.log("data ------>",data?.pages?.flatMap(page=>page.users));
+  const {isLoading, isError, data, refetch, fetchNextPage, hasNextPage } = useInfiniteQuery<{ nextCursor: number, users: User[]}>(
+    ['users'],
+    async () => await fetchUsers(1),
+    {
+      getNextPageParam: (lastPage: { nextCursor: any }) => lastPage.nextCursor 
+    }   
+  )
+
+  console.log("data ------>",data); 
+  //console.log(data?.pages?.flatMap(page=>page.users));
   //const users: User[]=data?.pages?.[0].users ?? [];
   // se utiliza para un infinite scrooll
   const users: User[]=data?.pages?.flatMap(page=>page.users) ?? [];
@@ -22,7 +47,6 @@ function App() {
   //const [loading, setLoading] = useState(false);  //ver 2.0
   //const [error, setError] = useState(false); //v.2.0
   //const [currentPage, setCurrentPage] = useState(1); //v.2.0
-
   //const originalUsers = useRef<User[]>([])   // quito v.2.0 
 
   //const [originalUsers, setOroginalUsers] = useState<User[]>([]);
@@ -44,7 +68,7 @@ function App() {
   }
   const handleReset = async () => {
     //setUsers(originalUsers.current)
-    // await refetch() // paso async-await vers.2.0 -> se quito away coloco void
+    //await refetch() // paso async-await vers.2.0 -> se quito away coloco void
     void  refetch();
   }
 
@@ -88,7 +112,7 @@ function App() {
   const filteredUsers = useMemo(() => {
     console.log('calculate filteredUsers');
     return typeof filterCountry === 'string' && filterCountry.length > 0
-      ? users.filter(user => {
+      ? users.filter((user: { location: { country: string } }) => {
         return user.location.country.toLowerCase().includes(filterCountry.toLowerCase())
       }) : users
   }, [users, filterCountry])
@@ -106,7 +130,7 @@ function App() {
       [SortBy.NAME]: user=> user.name.first,
       [SortBy.LAST]: user=> user.name.last
     }
-    return filteredUsers.toSorted((a, b) => {
+    return filteredUsers.toSorted((a: User, b: User) => {
       const extractProperty = compareProperties[sorting] 
       return extractProperty(a).localeCompare(extractProperty(b))
     })
@@ -138,16 +162,12 @@ function App() {
       {/* v.2.0  */}
       <main>
         { users.length>0 && 
-          <UsersList 
-          changeSorting={handleChangeSort} 
-          deleteUser={handleDelete} 
-          showColors={showColors}
-          users={sortedUsers} /> 
+          <UsersList changeSorting={handleChangeSort} deleteUser={handleDelete} showColors={showColors} users={sortedUsers} /> 
         }
 
         {isLoading && <strong>Cargando ...</strong>}
         {!isError && <p>Ha habido un error ...</p>}
-        {!isError && users.length===0 && <p>No hay usuarios ...</p>}
+        {!isLoading && !isError && users.length===0 && <p>No hay usuarios ...</p>}
           
         {!isLoading && !isError && hasNextPage === true &&
         <button onClick={()=> {void fetchNextPage()}}>Cargar mas resultados</button>}

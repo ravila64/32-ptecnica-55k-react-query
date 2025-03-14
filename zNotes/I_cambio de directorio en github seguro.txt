@@ -1,0 +1,2 @@
+ git config --global --add safe.directory 'F:/CURSO REACT DESDE CERO-MIDULIVE/aprendereact/projects/32-pTecnica-55k-React-Query'
+
