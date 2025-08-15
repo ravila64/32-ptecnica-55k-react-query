@@ -1,5 +1,5 @@
-import { useInfiniteQuery } from "@tanStack/react-query";
 import { fetchUsers } from "../services/users";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { type User } from "../types/types.d";
 
 export const useUsers = () =>{
@@ -8,9 +8,9 @@ export const useUsers = () =>{
         ['users'], // <- la key de la información o de la query
         fetchUsers,
         {
-          getNextPageParam: (lastPage) => lastPage.nextCursor
-        //   refetchOnWindowFocus: false,
-        //   staleTime: 1000 * 3
+          getNextPageParam: (lastPage) => lastPage.nextCursor,
+           refetchOnWindowFocus: false,
+           staleTime: 1000 * 3
         }
       )
       return {

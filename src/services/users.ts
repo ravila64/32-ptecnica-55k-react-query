@@ -1,5 +1,6 @@
 // cambio page:number x pageParam
 const delay = async (ms: number) => await new Promise(resolve => setTimeout(resolve, ms))
+
 export const fetchUsers = async ({ pageParam = 1 }: { pageParam?: number }) => {
   await delay(300)
     // seed, midudev       // v.2.
