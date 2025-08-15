@@ -1,5 +1,5 @@
 {
-  "name": "11b-typescript-prueba-tecnica-with-react-query",
+  "name": "32-ptecnica-55k-react-query",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -27,7 +27,7 @@
     "eslint-plugin-react": "^7.32.2",
     "ts-standard": "12.0.2",
     "typescript": "^4.9.5",
-    "vite": "^6.2.2"
+    "vite": "^7.1.2"  
   },
   "eslintConfig": {
     "parserOptions": {

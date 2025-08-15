@@ -1,41 +1,35 @@
 import { useMemo, useState } from 'react'
 // import { useEffect, useMemo, useRef, useState } from 'react'
-import { useInfiniteQuery } from '@tanStack/react-query'
+// import { useInfiniteQuery } from '@tanStack/react-query'
 import './App.css'
-import { Results } from './components/Results.tsx'
 import { UsersList } from './components/UsersList.tsx'
 import { SortBy, type User } from './types/types.d'
+import { Results } from './components/Results.tsx'
+import { useUsers } from './hooks/useUsers.ts'
 
-const fetchUsers = async ( page: number ) => {
-  return await fetch(`https://randomuser.me/api?results=10&seek=ravila&page=${page}`)
-  .then(async res =>{
-    if (!res.ok) throw new Error("Error en la petición")
-    return await res.json()
-  })
-  .then(res => {
-    const nextCursor = Number(res.info.page)
-    return{
-      users: res.results,
-      nextCursor
-    }
-  }
-) 
+// const fetchUsers = async ( page: number ) => {
+//   return await fetch(`https://randomuser.me/api?results=10&seek=ravila&page=${page}`)
+//   .then(async res =>{
+//     if (!res.ok) throw new Error("Error en la petición")
+//     return await res.json()
+//   })
+//   .then(res => {
+//     const nextCursor = Number(res.info.page)
+//     return{
+//       users: res.results,
+//       nextCursor
+//     }
+//   }
+// ) 
 
 function App() {
+  const {isLoading, isError, users, refetch, fetchNextPage, hasNextPage } = useUsers()
 
-  const {isLoading, isError, data, refetch, fetchNextPage, hasNextPage } = useInfiniteQuery<{ nextCursor: number, users: User[]}>(
-    ['users'],
-    async () => await fetchUsers(1),
-    {
-      getNextPageParam: (lastPage: { nextCursor: any }) => lastPage.nextCursor 
-    }   
-  )
-
-  console.log("data ------>",data); 
-  //console.log(data?.pages?.flatMap(page=>page.users));
-  //const users: User[]=data?.pages?.[0].users ?? [];
+  console.log("users ------>",users); 
+  //console.log(users?.pages?.flatMap(page=>page.users));
+  //const users: User[]=users?.pages?.[0].users ?? [];
   // se utiliza para un infinite scrooll
-  const users: User[]=data?.pages?.flatMap(page=>page.users) ?? [];
+  //const users: User[]=users?.pages?.flatMap(page=>page.users) ?? [];
  
   // array de users
   //const [users, setUsers] = useState<User[]>([])
@@ -66,6 +60,7 @@ function App() {
     setSorting(newSortingValue)
     // setSortByCountry(prevState => !prevState)
   }
+
   const handleReset = async () => {
     //setUsers(originalUsers.current)
     //await refetch() // paso async-await vers.2.0 -> se quito away coloco void
@@ -73,6 +68,7 @@ function App() {
   }
 
   const handleDelete = (email: string) => {
+    console.log(email);
     // // filteredUsers = users.filter((user, userIndex)
     // // userIndex !== index
     // const filteredUsers = users.filter((user) => user.email !== email)
@@ -83,38 +79,15 @@ function App() {
     setSorting(sort)
   }
 
-  // useEffect(() => {
-  //   setLoading(true); //v.2.0
-  //   setError(false);
-  //   // v.2.0
-  //   fetchUsers(currentPage)
-  //      .then (users=>{
-  //         setUsers(prevUsers =>{
-  //           const newUsers= prevUsers.concat(users)
-  //           originalUsers.current = newUsers
-  //           return newUsers
-  //         })
-  //   })
-  //   .catch(err => {
-  //       // v.2.0
-  //       setError(err);
-  //       console.log(err)
-  //     })
-
-  //     //v.2.0
-  //     .finally(()=>{
-  //       setLoading(false);
-  //     })
-  // }, [currentPage])  // cada vez que cambie el valor de la var currentPage
-
   // tambien puede ser: const filteredUsers=filterCountry !== null && filterCountry.length > 0
   
   const filteredUsers = useMemo(() => {
-    console.log('calculate filteredUsers');
-    return typeof filterCountry === 'string' && filterCountry.length > 0
-      ? users.filter((user: { location: { country: string } }) => {
+    console.log('calculate filteredUsers')
+    return filterCountry != null && filterCountry.length > 0
+      ? users.filter(user => {
         return user.location.country.toLowerCase().includes(filterCountry.toLowerCase())
-      }) : users
+      })
+      : users
   }, [users, filterCountry])
 
 
@@ -124,13 +97,12 @@ function App() {
   const sortedUsers = useMemo(() => {
     console.log('calculate sortedUsers');
     if(sorting===SortBy.NONE) return filteredUsers
-
     const compareProperties: Record<string, (user:User) => any> ={
       [SortBy.COUNTRY]: user=> user.location.country,
       [SortBy.NAME]: user=> user.name.first,
       [SortBy.LAST]: user=> user.name.last
     }
-    return filteredUsers.toSorted((a: User, b: User) => {
+    return filteredUsers.toSorted((a:User, b:User) => {
       const extractProperty = compareProperties[sorting] 
       return extractProperty(a).localeCompare(extractProperty(b))
     })
@@ -141,7 +113,6 @@ function App() {
       <h1>Prueba técnica 55k - React Query</h1>
       <Results />
       <header>
-
         <button onClick={toggleColors}>
           Color rows
          </button>
@@ -156,13 +127,16 @@ function App() {
 
         <input placeholder='Filtra por pais' onChange={(e) => {
           setFilterCountry(e.target.value)
-        }} />
+        }} 
+        />
 
       </header>
-      {/* v.2.0  */}
       <main>
         { users.length>0 && 
-          <UsersList changeSorting={handleChangeSort} deleteUser={handleDelete} showColors={showColors} users={sortedUsers} /> 
+          <UsersList changeSorting={handleChangeSort} 
+          deleteUser={handleDelete} 
+          showColors={showColors} 
+          users={sortedUsers} /> 
         }
 
         {isLoading && <strong>Cargando ...</strong>}

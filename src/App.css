@@ -30,7 +30,7 @@ header {
   /*#333 */
 }
 
-/* en vez de 2n+1 uiliza even*/
+/* en vez de 2n+1 utiliza even*/
 .table--showColors tr:nth-child(even) {
   background: #bbe4e9;
   /* #555*/
