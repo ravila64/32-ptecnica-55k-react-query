@@ -7,21 +7,6 @@ import { SortBy, type User } from './types/types.d'
 import { Results } from './components/Results.tsx'
 import { useUsers } from './hooks/useUsers.ts'
 
-// const fetchUsers = async ( page: number ) => {
-//   return await fetch(`https://randomuser.me/api?results=10&seek=ravila&page=${page}`)
-//   .then(async res =>{
-//     if (!res.ok) throw new Error("Error en la petición")
-//     return await res.json()
-//   })
-//   .then(res => {
-//     const nextCursor = Number(res.info.page)
-//     return{
-//       users: res.results,
-//       nextCursor
-//     }
-//   }
-// ) 
-
 function App() {
   const {isLoading, isError, users, refetch, fetchNextPage, hasNextPage } = useUsers()
 
@@ -102,7 +87,7 @@ function App() {
       [SortBy.NAME]: user=> user.name.first,
       [SortBy.LAST]: user=> user.name.last
     }
-    return filteredUsers.toSorted((a:User, b:User) => {
+    return filteredUsers.toSorted((a, b) => {
       const extractProperty = compareProperties[sorting] 
       return extractProperty(a).localeCompare(extractProperty(b))
     })
@@ -140,7 +125,7 @@ function App() {
         }
 
         {isLoading && <strong>Cargando ...</strong>}
-        {!isError && <p>Ha habido un error ...</p>}
+        {isError && <p>Ha habido un error ...</p>}
         {!isLoading && !isError && users.length===0 && <p>No hay usuarios ...</p>}
           
         {!isLoading && !isError && hasNextPage === true &&

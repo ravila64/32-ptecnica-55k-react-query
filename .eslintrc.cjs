@@ -3,6 +3,7 @@ const { parserOptions } = require('eslint-plugin-import/config/react');
 module.exports = {
   root: true,
   env: { browser: true, es2021: true },
+ // env: { browser: true, ESNext: true },
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
