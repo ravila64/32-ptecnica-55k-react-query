@@ -4,7 +4,7 @@ const delay = async (ms: number) => await new Promise(resolve => setTimeout(reso
 export const fetchUsers = async ({ pageParam = 1 }: { pageParam?: number }) => {
   await delay(300)
     // seed, midudev       // v.2.
-  return await fetch('https://randomuser.me/api?results=10&seed=ravila&page=${pageParm}')
+  return await fetch(`https://randomuser.me/api?results=10&seed=midudev&page=${pageParam}`)
        .then(async res=>{
           console.log("Page now pageParam ", pageParam)
           console.log("status of res.ok ", res.ok, " res.status ", res.status, " res.statusText ", res.statusText)

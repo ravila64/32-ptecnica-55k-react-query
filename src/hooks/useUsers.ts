@@ -1,6 +1,6 @@
-import { fetchUsers } from "../services/users";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { type User } from "../types/types.d";
+import { fetchUsers } from '../services/users';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { type User } from '../types/types.d';
 
 export const useUsers = () =>{
 
